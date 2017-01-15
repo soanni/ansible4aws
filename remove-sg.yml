@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+   region: us-west-2
+  tasks:
+   - name: Remove sg.
+     ec2_group:
+      region: "{{ region }}"
+      name: docker-machine
+      description: Docker Machine
+      state: absent

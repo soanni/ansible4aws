@@ -1,0 +1,20 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+   region: us-west-2
+  tasks:
+   - name: EC2 basic provisioning
+     ec2:
+      region: "{{ region }}"
+      key_name: ansible-4-aws-test
+      instance_type: t2.micro
+      image: ami-1e299d7e
+      wait: yes
+      group: sg_webserver_ansible4aws
+      instance_tags:
+       group: webserver
+      exact_count: 1
+      count_tag:
+       group: webserver
