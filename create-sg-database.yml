@@ -1,0 +1,26 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+   region: us-west-2
+   allowed_ip: 46.0.131.219/32
+  tasks:
+   - name: Create DATABASE security group.
+     ec2_group:
+      region: "{{ region }}"
+      name: sg_database_ansible4aws
+      description: Security group for ansible4aws database
+      rules:
+       - proto: tcp
+         from_port: 22
+         to_port: 22
+         cidr_ip: "{{ allowed_ip }}"
+       # allow mysql access from webserver group
+       - proto: tcp
+         from_port: 3306
+         to_port: 3306
+         group_name: sg_webserver_ansible4aws
+      rules_egress:
+       - proto: all
+         cidr_ip: 0.0.0.0/0
