@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+   region: us-west-2
+  tasks:
+   - name: Remove key pair.
+     ec2_key:
+      region: "{{ region }}"
+      name: ansible-4-aws-test
+      state: absent

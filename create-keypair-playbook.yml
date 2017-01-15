@@ -1,0 +1,19 @@
+---
+- hosts: local
+  connection: local
+  gather_facts: no
+  vars:
+   region: us-west-2
+   keyname: ansible-4-aws-test
+  tasks:
+   - name: Create key pair
+     ec2_key:
+      region: "{{ region }}"
+      name: "{{ keyname }}"
+     register: mykey
+
+   - debug: var=mykey
+
+   - name: Write to file
+     copy: content="{{ mykey.key.private_key }}" dest="~/.ssh/{{ keyname }}.pem" mode=0600
+     when: mykey.changed
