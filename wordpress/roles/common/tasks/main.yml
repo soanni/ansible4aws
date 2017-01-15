@@ -1,0 +1,4 @@
+---
+- name: install the 'Development tools' package group
+  #shell: yum --setopt=group_package_types=mandatory,default,optional group install "Development Tools" 
+  yum: name="@Development tools" state=present update_cache=yes

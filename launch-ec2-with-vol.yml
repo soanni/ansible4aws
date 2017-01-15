@@ -5,7 +5,7 @@
   vars:
    region: us-west-2
   tasks:
-   - name: EC2 basic provisioning
+   - name: EC2 provisioning with general purpose EBS volume
      ec2:
       region: "{{ region }}"
       key_name: ansible-4-aws-test
@@ -13,3 +13,8 @@
       image: ami-1e299d7e
       wait: yes
       group: sg_webserver_ansible4aws
+      volumes:
+       - device_name: /dev/sda1
+         device_type: gp2
+         volume_size: 10
+         delete_on_termination: true

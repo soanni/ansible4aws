@@ -1,0 +1,70 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+   region: us-west-2
+   keyname: wordpress-ansible-4-aws
+   groupname: sg_wordpress_ansible_4_aws
+   allowed_ip: 46.0.131.219/32
+   instance_type: t2.nano
+   image: ami-1e299d7e
+  tasks:
+   - name: create key pair
+     tags: keypair
+     ec2_key:
+      region: "{{ region }}"
+      name: "{{ keyname }}"
+     register: mykey
+
+   - name: write the private key to file
+     copy: content="{{ mykey.key.private_key }}" dest="~/.ssh/{{ keyname }}.pem" mode=0600
+     when: mykey.changed
+
+   - name: create sg
+     tags: sg
+     ec2_group:
+      region: "{{ region }}"
+      name: "{{ groupname }}"
+      description: sg for ansible for aws webserver host
+      rules:
+       # allow ssh access from your ip address
+       - proto: tcp
+         from_port: 22
+         to_port: 22
+         cidr_ip: "{{ allowed_ip }}"
+       # allow http access from anywhere
+       - proto: tcp
+         from_port: 80
+         to_port: 80
+         cidr_ip: 0.0.0.0/0
+       # allow https access from anywhere
+       - proto: tcp
+         from_port: 443
+         to_port: 443
+         cidr_ip: 0.0.0.0/0
+      rules_egress:
+       - proto: all
+         cidr_ip: 0.0.0.0/0
+   - name: launch ec2 instance
+     tags: ec2
+     ec2:
+      region: "{{ region }}"
+      key_name: "{{ keyname }}"
+      instance_type: "{{ instance_type }}"
+      image: "{{ image }}"
+      wait: yes
+      group: "{{ groupname }}"
+      # ec2 idempotance
+      id: wordpress_launch_1
+      instance_tags:
+       Name: wordpress-1
+       class: wordpress
+     register: ec2
+   - name: associate new EIP for the instance
+     tags: eip
+     ec2_eip:
+      region: "{{ region }}"
+      device_id: "{{ item }}"
+     with_items: "{{ ec2.instance_ids }}"
+     when: item is defined
