@@ -1,3 +1,3 @@
-staging_vpc: vpc-1159e176
-staging_subnet_public: subnet-87ca92df
-staging_subnet_private: subnet-b9ca92e1
+staging_vpc: vpc-b254ecd5
+staging_subnet_public: subnet-a9c29af1
+staging_subnet_private: subnet-acc29af4
