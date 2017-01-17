@@ -1,0 +1,3 @@
+staging_vpc: vpc-0160d866
+staging_subnet_public: subnet-bfd38be7
+staging_subnet_private: subnet-b0d38be8
