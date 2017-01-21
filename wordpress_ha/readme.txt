@@ -4,3 +4,4 @@
 4. ansible-playbook -i hosts sg_modify.yml
 5. ansible-playbook -i hosts provisioning_rds.yml
 6. ansible-playbook -i hosts provisioning_wp.yml
+7. ./run.playbook.sh
