@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+   region: us-west-2
+   name: staging_vpc
+  tasks:
+   - name: get vpc id
+     command: "aws ec2 describe-vpcs --filters Name=tag:Name,Values={{ name }} --query 'Vpcs[0].VpcId' --output text"
+     register: vpcid
+   - name: delete vpc
+     ec2_vpc:
+      region: "{{ region }}"
+      state: absent
+      vpc_id: "{{ vpcid.stdout }}"
+      resource_tags: '{"Name":"{{ name }}"}'
+      wait: yes
