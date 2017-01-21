@@ -1,0 +1,27 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars_files:
+   - staging_vpc_info
+  vars:
+   region: us-west-2
+   allowed_ip: 46.0.131.219/32
+   prefix: staging
+   vpc_id: "{{ staging_vpc }}"
+  tasks:
+   - name: create sg for jump box instance
+     ec2_group:
+      region: "{{ region }}"
+      vpc_id: "{{ vpc_id }}"
+      name: "{{ prefix }}_sg_jumpbox"
+      description: security group for jump box
+      rules:
+       - proto: tcp
+         from_port: 22
+         to_port: 22
+         cidr_ip: "{{ allowed_ip }}"
+      rules_egress:
+       - proto: all
+         cidr_ip: 0.0.0.0/0
+
