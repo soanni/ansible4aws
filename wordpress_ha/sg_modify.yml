@@ -1,0 +1,66 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+   region: us-west-2
+   #TODO restrict the ip
+   allowed_ip: 0.0.0.0/0
+   prefix: staging
+   env: staging 
+   private_subnet: 10.0.1.0/24
+  tasks:
+   - name: get {{ env }}_vpc id
+     command: "aws ec2 describe-vpcs 
+                --region {{ region }}
+                --filters Name=tag:Name,Values={{ env }}_vpc
+                --query 'Vpcs[0].VpcId' --output text"
+     register: vpc_id
+   - name: modify sg_web rules
+     ec2_group:
+      region: "{{ region }}"
+      vpc_id: "{{ vpc_id.stdout }}"
+      name: "{{ prefix }}_sg_web"
+      description: security group for webservers
+      rules:
+       # allow ssh from your ip
+       - proto: tcp
+         from_port: 22
+         to_port: 22
+         cidr_ip: "{{ allowed_ip }}"
+       # allow http access from anywhere
+       - proto: tcp
+         from_port: 80
+         to_port: 80
+         cidr_ip: 0.0.0.0/0
+       # allow https access from anywhere
+       - proto: tcp
+         from_port: 443
+         to_port: 443
+         cidr_ip: 0.0.0.0/0
+      # TODO correct outbound rules OR cant even update via yum
+      rules_egress:
+       - proto: tcp
+         from_port: 3306
+         to_port: 3306
+         group_name: "{{ prefix }}_sg_database"
+   - name: modify sg_database rules
+     ec2_group:
+      region: "{{ region }}"
+      vpc_id: "{{ vpc_id.stdout }}"
+      name: "{{ prefix }}_sg_database"
+      description: security group for databases
+      rules:
+       - proto: tcp
+         from_port: 3306
+         to_port: 3306
+         group_name: "{{ prefix }}_sg_web"
+      rules_egress:
+       - proto: tcp
+         from_port: 80
+         to_port: 80
+         cidr_ip: 0.0.0.0/0
+       - proto: tcp
+         from_port: 443
+         to_port: 443
+         cidr_ip: 0.0.0.0/0

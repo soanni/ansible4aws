@@ -1,0 +1,27 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+   env: staging
+   region: us-west-2
+   prefix: staging
+  tasks:
+   - name: get {{ env }}_vpc id
+     command: "aws ec2 describe-vpcs 
+               --region {{ region }}
+               --filters Name=tag:Name,Values={{ env }}_vpc
+               --query 'Vpcs[0].VpcId' --output text"
+     register: vpc_id
+   - name: create empty security group for webservers
+     ec2_group:
+      region: "{{ region }}"
+      vpc_id: "{{ vpc_id.stdout }}"
+      name: "{{ prefix }}_sg_web"
+      description: security group for webservers
+   - name: create empty security group for databases
+     ec2_group:
+      region: "{{ region }}"
+      vpc_id: "{{ vpc_id.stdout }}"
+      name: "{{ prefix }}_sg_database"
+      description: security group for databases
