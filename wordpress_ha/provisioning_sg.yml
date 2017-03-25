@@ -81,7 +81,7 @@
       name: "{{ env }}_sg_ansible"
       description: sec group for ansible
       rules:
-       - proto: tpc
+       - proto: tcp
          from_port: 22
          to_port: 22
          cidr_ip: "{{ allowed_ip }}"
