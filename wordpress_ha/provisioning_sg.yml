@@ -74,32 +74,32 @@
          from_port: 3306
          to_port: 3306
          group_name: "{{ env }}_sg_wordpress"
-    - name: create sg_ansible rules
-      ec2_group:
-       region: "{{ region }}"
-       vpc_id: "{{ vpcid.stdout }}"
-       name: "{{ env }}_sg_ansible"
-       description: sec group for ansible
-       rules:
-        - proto: tpc
-          from_port: 22
-          to_port: 22
-          cidr_ip: "{{ allowed_ip }}"
-    - name: create sg_wordpress lb
-      ec2_group:
-       region: "{{ region }}"
-       vpc_id: "{{ vpcid.stdout }}"
-       name: "{{ env }}_sg_wordpress_lb"
-       description: sec group for wordpress lb
-       rules:
-        - proto: http
-          from_port: 80
-          to_port: 80
-          cidr_ip: 0.0.0.0/0
-        - proto: https
-          from_port: 443
-          to_port: 443
-          cidr_ip: 0.0.0.0/0
+   - name: create sg_ansible rules
+     ec2_group:
+      region: "{{ region }}"
+      vpc_id: "{{ vpcid.stdout }}"
+      name: "{{ env }}_sg_ansible"
+      description: sec group for ansible
+      rules:
+       - proto: tpc
+         from_port: 22
+         to_port: 22
+         cidr_ip: "{{ allowed_ip }}"
+   - name: create sg_wordpress lb
+     ec2_group:
+      region: "{{ region }}"
+      vpc_id: "{{ vpcid.stdout }}"
+      name: "{{ env }}_sg_wordpress_lb"
+      description: sec group for wordpress lb
+      rules:
+       - proto: http
+         from_port: 80
+         to_port: 80
+         cidr_ip: 0.0.0.0/0
+       - proto: https
+         from_port: 443
+         to_port: 443
+         cidr_ip: 0.0.0.0/0
 
 
   
