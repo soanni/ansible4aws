@@ -6,3 +6,4 @@
 6. ansible-playbook -i hosts provisioning_wp.yml
 7. ./run.playbook.sh
 8. ansible-playbook -i hosts ami_create.yml
+9. ansible-playbook -i hosts provisioning_asg.yml

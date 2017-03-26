@@ -3,7 +3,7 @@
   connection: local
   gather_facts: no
   tasks:
-   - include_vars: "{{ }}.yml"
+   - include_vars: "{{ env }}.yml"
    - set_fact:
       timestamp: "{{ lookup('pipe','date +%g%m%d%H%M%S') }}"
    - name: Crete public ELB
@@ -21,7 +21,7 @@
       health_check:
        ping_protocol: http
        ping_port: 80
-       ping_path: "/index.php"
+       ping_path: "/"
        response_timeout: 2
        interval: 10
        unhealthy_threshold: 2

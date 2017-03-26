@@ -4,7 +4,7 @@ zones: ['us-west-2a','us-west-2b']
 asg_subnet_ids: ['subnet-06a6194f','subnet-8b4a2fec']
 elb_subnets: ['subnet-3ca51a75','subnet-c3482da4']
 asg_name: wordpress
-image-id: ami-06fa6f66
+image_id: ami-06fa6f66
 instance_type: t2.micro
 security_groups: ['sg-c91afcb2']
 elb_group_ids: ['sg-3f678144']
