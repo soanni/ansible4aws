@@ -12,7 +12,7 @@
    subnet_group: dbsg_wordpress
    param_group: wordpress
    # staging_sg_database security group ID
-   security_groups: sg-fe0abc86
+   security_groups: sg-8318fef8
   tasks:
    - name: "get {{ env }}_subnet_private_0 subnet id"
      command: "aws ec2 describe-subnets 

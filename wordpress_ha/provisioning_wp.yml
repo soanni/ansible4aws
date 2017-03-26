@@ -32,7 +32,6 @@
        image: "{{ image }}"
        wait: yes
        group: "{{ env }}_sg_web"
-       id: wordpress_ha_8
        instance_tags:
         Name: "{{ ins_name }}"
         class: wordpress_ha 
